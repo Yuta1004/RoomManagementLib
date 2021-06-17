@@ -1,4 +1,5 @@
 import json
+import uuid
 
 from roomlib.net.tcp import unicast_send, unicast_recv
 from roomlib.net.format import ResponseMsgMaker
@@ -16,6 +17,7 @@ class Host:
         - password : ルームのパスワード
         """
 
+        self.room_id = str(uuid.uuid4())
         self.user_list = {}
         self.users_limit = users_limit
         self.recv_worker = unicast_recv(port, self.__tcp_msg_receiver)
