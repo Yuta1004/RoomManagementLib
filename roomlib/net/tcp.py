@@ -22,19 +22,16 @@ def unicast_send(address, port, msg):
 
 def unicast_recv(port, receiver):
     """
-    RecvWorkerを生成して返す
+    RecvWorkerを生成して起動する
 
     ## Params
     - port : 通信を受け付けるポート
     - receiver : メッセージを受け取る関数 (引数は1つ)
-
-    ## Return
-    - worker : RecvWorker (usage: workser.start())
     """
 
     worker = RecvWorker(port, receiver)
     worker.setDaemon(True)
-    return worker
+    worker.start()
 
 
 class RecvWorker(threading.Thread):
