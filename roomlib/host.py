@@ -1,6 +1,7 @@
 import json
 import uuid
 
+from roomlib.util.auth import auth_password, hash_password
 from roomlib.net.tcp import unicast_send, unicast_recv
 from roomlib.net.format import ResponseMsgMaker
 
@@ -22,6 +23,7 @@ class Host:
         self.room_id = str(uuid.uuid4())
         self.user_list = {}
         self.users_limit = users_limit
+        self.hashed_password = hash_password(password)
         unicast_recv(port, self.__tcp_msg_receiver)
 
     def wait(self):
@@ -76,13 +78,18 @@ class Host:
     def __tcp_msg_receiver(self, data):
         msg_json = json.loads(data.msg)
         command = msg_json["command"]
+        auth_info = msg_json["auth"]
         user_info = msg_json["user"]
         sender_info = (data.address, user_info["port"])
 
         # 入室リクエスト
         if command == "join":
-            if len(self.user_list) > self.user_limit:
+            if len(self.user_list) > self.users_limit:
                 unicast_send(sender_info[0], sender_info[1], ResponseMsgGenerator(False, "Sorry, This room is full."))
+                return
+
+            if not auth_password(auth_info["password"], self.hashed_password):
+                unicast_send(sender_info[0], sender_info[1], ResponseMsgMaker(False, "Password is unauthorized."))
                 return
 
             if user_info["id"] not in self.user_list:

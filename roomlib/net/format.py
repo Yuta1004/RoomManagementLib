@@ -12,6 +12,9 @@ class RequestMsgMaker:
             "id": str,
             "port": int
         },
+        "auth": {
+            "password": str
+        },
         "values": {
             "key": "value"
         }
@@ -34,8 +37,22 @@ class RequestMsgMaker:
                 "id": user_id,
                 "port": myport
             },
+            "auth": {
+                "password": ""
+            },
             "values": {}
         }
+
+    def set_auth(self, password):
+        """
+        authフィールドをセットする
+        (※入室リクエストを生成する場合のみ使用)
+
+        ## Params
+        - password : パスワード(未ハッシュ)
+        """
+
+        self.data["auth"]["password"] = password
 
     def set_values(self, **values):
         """
