@@ -1,7 +1,10 @@
 import json
 import uuid
+import time
 
 from roomlib.util.auth import auth_password, hash_password
+from roomlib.net.info import get_host_ipaddresses
+from roomlib.net.udp import broadcast_send
 from roomlib.net.tcp import unicast_send, unicast_recv
 from roomlib.net.format import format_check_req, ResponseMsgMaker
 
@@ -21,16 +24,33 @@ class Host:
 
         self.name = name
         self.room_id = str(uuid.uuid4())
+        self.hashed_password = hash_password(password)
+
         self.user_list = {}
         self.users_limit = users_limit
-        self.hashed_password = hash_password(password)
-        unicast_recv(port, self.__tcp_msg_receiver)
 
-    def wait(self):
+        self.join_updated_flag = False
+        self.host_ipaddresses = get_host_ipaddresses()
+
+        self.port = port
+        unicast_recv(self.port, self.__tcp_msg_receiver)
+
+    def wait(self, tick, port):
         """
         他クライアントの参加を待機する
+
+        ## Params
+        - tick : チェック間隔(s)
+        - port : ブロードキャストを流すポート
+
+        ## Returns
+        - updated : 情報の更新があった場合はTrue
         """
-        pass
+
+        for (address, netmask) in self.host_ipaddresses:
+            broadcast_send(address, netmask, port, "RoomManagementLib:{}:{}:{}".format(self.room_id, self.name, self.port))
+        time.sleep(tick)
+        return self.join_updated_flag
 
     def set_values(self, **values):
         """
@@ -95,6 +115,7 @@ class Host:
                 return
 
             if user_info["id"] not in self.user_list:
+                self.join_updated_flag = True
                 self.user_list[user_info["id"]] = sender_info
                 self.send(ResponseMsgMaker(True, "").make(), [user_info["id"]])
             else:
