@@ -112,7 +112,9 @@ class Host:
         """
         ルームを解散する
         """
-        pass
+
+        self.send(RequestMsgMaker("finish", "__host__", self.port).make(), self.user_list.keys())
+        self.user_list = []
 
     def __tcp_msg_receiver(self, data):
         msg_json = json.loads(data.msg)
