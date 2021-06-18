@@ -26,6 +26,9 @@ class Host:
         self.room_id = str(uuid.uuid4())
         self.hashed_password = hash_password(password)
 
+        self.values = {}
+        self.updated_values_keys = set()
+
         self.user_list = {}
         self.users_limit = users_limit
 
@@ -59,13 +62,25 @@ class Host:
         ## Params
         - values : key=valueの形で名前と値を指定する (可変長引数)
         """
-        pass
+
+        for (key, value) in values.items():
+            if key in self.values and self.values[key] == value:
+                continue
+            self.values[key] = value
+            self.updated_values_keys.add(key)
 
     def get_value(self, key):
         """
         共有変数の値を取得する
+
+        ## Params
+        - key : 共有変数名
+
+        ## Returns
+        - value : 共有変数の値(指定された変数が存在しない場合None)
         """
-        pass
+
+        return self.values.get(key, None)
 
     def sync(self):
         """
