@@ -84,8 +84,6 @@ class Host:
         user_info = msg_json["user"]
         sender_info = (data.address, user_info["port"])
 
-        print(msg_json)
-
         # 入室リクエスト
         if command == "join":
             if len(self.user_list) > self.users_limit:
