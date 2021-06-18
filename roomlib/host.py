@@ -89,11 +89,11 @@ class Host:
         # 入室リクエスト
         if command == "join":
             if len(self.user_list) > self.users_limit:
-                unicast_send(sender_info[0], sender_info[1], ResponseMsgMaker(False, "Sorry, This room is full."))
+                unicast_send(sender_info[0], sender_info[1], ResponseMsgMaker(False, "Sorry, This room is full.").make())
                 return
 
             if not auth_password(auth_info["password"], self.hashed_password):
-                unicast_send(sender_info[0], sender_info[1], ResponseMsgMaker(False, "Password is unauthorized."))
+                unicast_send(sender_info[0], sender_info[1], ResponseMsgMaker(False, "Password is unauthorized.").make())
                 return
 
             if user_info["id"] not in self.user_list:
