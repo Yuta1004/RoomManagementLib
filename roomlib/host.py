@@ -3,7 +3,7 @@ import uuid
 
 from roomlib.util.auth import auth_password, hash_password
 from roomlib.net.tcp import unicast_send, unicast_recv
-from roomlib.net.format import ResponseMsgMaker
+from roomlib.net.format import format_check_req, ResponseMsgMaker
 
 
 class Host:
@@ -77,10 +77,14 @@ class Host:
 
     def __tcp_msg_receiver(self, data):
         msg_json = json.loads(data.msg)
+        if not format_check_req(msg_json):
+            return
         command = msg_json["command"]
         auth_info = msg_json["auth"]
         user_info = msg_json["user"]
         sender_info = (data.address, user_info["port"])
+
+        print(msg_json)
 
         # 入室リクエスト
         if command == "join":

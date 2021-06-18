@@ -1,6 +1,46 @@
 import json
 
 
+def format_check_req(target_dict):
+    """
+    辞書の内容がRequestFormatを満たすかどうかを返す
+
+    ## Params
+    - target_dict : 検査対象辞書
+
+    ## Returns
+    - result : 仕様を全て満たす場合はTrue,そうでないときFalse
+    """
+
+    try:
+        target_dict["command"]
+        target_dict["user"]["id"]
+        target_dict["user"]["port"]
+        target_dict["auth"]["password"]
+    except:
+        return False
+    return True
+
+
+def format_check_resp(target_dict):
+    """
+    辞書の内容がRequestFormatを満たすかどうかを返す
+
+    ## Params
+    - target_dict : 検査対象辞書
+
+    ## Returns
+    - result : 仕様を全て満たす場合はTrue,そうでないときFalse
+    """
+
+    try:
+        target_dict["result"]["status"]
+        target_dict["resutl"]["msg"]
+    except:
+        return False
+    return True
+
+
 class RequestMsgMaker:
     """
     策定済みフォーマットに基づいてメッセージを作成する
