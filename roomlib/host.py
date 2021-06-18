@@ -7,16 +7,18 @@ from roomlib.net.format import ResponseMsgMaker
 
 class Host:
 
-    def __init__(self, port, users_limit, password):
+    def __init__(self, name, port, users_limit, password):
         """
         Hostのコンストラクタ
 
         ## Params
+        - name : ルーム名
         - port : ルームを開くポート
         - users_limit : 参加人数の上限
         - password : ルームのパスワード
         """
 
+        self.name = name
         self.room_id = str(uuid.uuid4())
         self.user_list = {}
         self.users_limit = users_limit
