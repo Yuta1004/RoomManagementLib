@@ -6,7 +6,7 @@ from roomlib.util.auth import auth_password, hash_password
 from roomlib.net.info import get_host_ipaddresses
 from roomlib.net.udp import broadcast_send
 from roomlib.net.tcp import unicast_send, unicast_recv
-from roomlib.net.format import format_check_req, ResponseMsgMaker
+from roomlib.net.format import format_check_req, RequestMsgMaker, ResponseMsgMaker
 
 
 class Host:
@@ -86,7 +86,12 @@ class Host:
         """
         ルームの状態を参加クライアントと同期する
         """
-        pass
+
+        target_key = list(self.updated_values_keys)
+        req_msg = RequestMsgMaker("sync", "__host__", self.port)
+        req_msg.set_values(**dict(zip(target_key, [self.values[key] for key in target_key])))
+        self.send(req_msg.make(), self.user_list.keys())
+        self.updated_values_keys = set()
 
     def send(self, msg, target_users):
         """
@@ -102,7 +107,6 @@ class Host:
                 address = self.user_list[user_id][0]
                 port = self.user_list[user_id][1]
                 unicast_send(address, port, msg)
-
 
     def finish(self):
         """
