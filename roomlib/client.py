@@ -124,7 +124,12 @@ class Client:
         """
         ルームから退出する
         """
-        pass
+
+        self.send(RequestMsgMaker("finish", self.user_id, self.port).make())
+        self.room_id = None
+        self.room_name = None
+        self.room_conn_info = (None, None)
+        self.available_rooms = {}
 
     def __tcp_msg_receiver(self, data):
         msg_json = json.loads(data.msg)
