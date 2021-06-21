@@ -122,7 +122,12 @@ class Client:
         """
         ルームの状態の同期を行う
         """
-        pass
+
+        target_key = list(self.updated_values_keys)
+        req_msg = RequestMsgMaker("sync", self.user_id, self.port)
+        req_msg.set_values(**dict(zip(target_key, [self.values[key] for key in target_key])))
+        self.send(req_msg.make())
+        self.updated_values_keys = set()
 
     def finish(self):
         """
