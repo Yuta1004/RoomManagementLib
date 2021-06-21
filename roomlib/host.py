@@ -124,6 +124,7 @@ class Host:
         auth_info = msg_json["auth"]
         user_info = msg_json["user"]
         sender_info = (data.address, user_info["port"])
+        var_values = msg_json["values"]
 
         # 入室リクエスト
         if command == "join":
@@ -149,4 +150,7 @@ class Host:
 
         # 情報同期リクエスト
         if command == "sync":
-            pass
+            for key, value in var_values.items():
+                self.values[key] = value
+                self.updated_values_keys.add(key)
+            self.sync()
