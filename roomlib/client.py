@@ -136,7 +136,19 @@ class Client:
 
         # ホストからの要求
         if format_check_req(msg_json):
-            pass
+            command = msg_json["command"]
+            var_values = msg_json["values"]
+
+            ## 同期処理
+            if command == "sync":
+                pass
+
+            ## 部屋解散
+            if command == "finish":
+                self.room_id = None
+                self.room_name = None
+                self.room_conn_info = (None, None)
+                self.available_rooms = {}
 
         # ホストからの返事
         if format_check_resp(msg_json):
