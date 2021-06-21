@@ -116,6 +116,10 @@ class Client:
         - msg : メッセージ
         """
 
+        address = self.room_conn_info[0]
+        port = self.room_conn_info[1]
+        unicast_send(address, port, msg)
+
     def finish(self):
         """
         ルームから退出する
