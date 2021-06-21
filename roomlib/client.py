@@ -18,6 +18,7 @@ class Client:
         """
 
         self.user_id = str(uuid.uuid4())
+        self.notice_func = set()
 
         self.room_id = None
         self.room_name = None
@@ -102,6 +103,16 @@ class Client:
 
         return self.values.get(key, None)
 
+    def add_update_notice_func(self, func):
+        """
+        更新を通知する関数を追加する
+
+        ## Params
+        - func : 更新時に呼ばれる関数
+        """
+
+        self.notice_func.add(func)
+
     def sync(self):
         """
         ルームの状態の同期を行う
@@ -143,6 +154,8 @@ class Client:
             if command == "sync":
                 for key, value in var_values.items():
                     self.values[key] = value
+                for func in self.notice_func:
+                    func(self)
 
             ## 部屋解散
             if command == "finish":

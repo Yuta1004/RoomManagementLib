@@ -25,6 +25,7 @@ class Host:
         self.name = name
         self.room_id = str(uuid.uuid4())
         self.hashed_password = hash_password(password)
+        self.notice_func = set()
 
         self.values = {}
         self.updated_values_keys = set()
@@ -83,6 +84,16 @@ class Host:
         """
 
         return self.values.get(key, None)
+
+    def add_update_notice_func(self, func):
+        """
+        更新通知を受け取る関数を追加する
+
+        ## Params
+        - func : 更新時に実行する関数
+        """
+
+        self.notice_func.add(func)
 
     def get_user_ids(self):
         """
@@ -166,3 +177,6 @@ class Host:
                 self.values[key] = value
                 self.updated_values_keys.add(key)
             self.sync()
+            for func in self.notice_func:
+                func(self)
+
