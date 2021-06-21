@@ -1,7 +1,10 @@
 import uuid
+import json
+import time
 
-from roomlib.net.tcp import unicast_recv
+from roomlib.net.tcp import unicast_send, unicast_recv
 from roomlib.net.udp import broadcast_recv
+from roomlib.net.format import format_check_req, format_check_resp, RequestMsgMaker, ResponseMsgMaker
 
 
 class Client:
@@ -15,6 +18,10 @@ class Client:
         """
 
         self.user_id = str(uuid.uuid4())
+
+        self.room_id = None
+        self.room_name = None
+        self.room_conn_info = (None, None)  # (address, port)
         self.available_rooms = {}
 
         self.values = {}
@@ -44,15 +51,29 @@ class Client:
             self.available_rooms[room_id] = (address, port, name)
         return self.available_rooms
 
-    def join(self, roomid, password):
+    def join(self, room_id, password):
         """
         ルームに参加する
 
         ## Params
-        - roomid : 参加するルームのID
+        - room_id : 参加するルームのID
         - password : 参加するルームのパスワード
+
+        ## Returns
+        - result : 入室が成功した場合True
         """
-        pass
+
+        req_msg = RequestMsgMaker("join", self.user_id, self.port)
+        req_msg.set_auth(password)
+
+        self.room_id = room_id
+        address = self.available_rooms[self.room_id][0]
+        port = self.available_rooms[self.room_id][1]
+        unicast_send(address, port, req_msg.make())
+
+        while (self.room_id is not None) and (self.room_name is None):
+            time.sleep(1)
+        return self.room_name is not None
 
     def set_values(self, **values):
         """
@@ -102,4 +123,26 @@ class Client:
         pass
 
     def __tcp_msg_receiver(self, data):
-        pass
+        msg_json = json.loads(data.msg)
+
+        # ホストからの要求
+        if format_check_req(msg_json):
+            pass
+
+        # ホストからの返事
+        if format_check_resp(msg_json):
+            command = msg_json["command"]
+            result_info = msg_json["result"]
+
+            ## 入室処理の結果
+            if command == "join":
+                if result_info["status"]:
+                    address = self.available_rooms[self.room_id][0]
+                    port = self.available_rooms[self.room_id][1]
+                    self.room_conn_info = (address, port)
+                    self.room_name = self.available_rooms[self.room_id][2]
+                else:
+                    self.room_id = None
+                    self.room_name = None
+                    self.room_conn_info = (None, None)
+                    print(result_info["msg"])
