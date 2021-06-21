@@ -1,3 +1,8 @@
+import uuid
+
+from roomlib.net.tcp import unicast_recv
+
+
 class Client:
 
     def __init__(self, port):
@@ -7,7 +12,14 @@ class Client:
         ## Params
         - port : ルーム検索対象ポート
         """
-        pass
+
+        self.user_id = str(uuid.uuid4())
+
+        self.values = {}
+        self.updated_values_keys = set()
+
+        self.port = port
+        unicast_recv(self.port, self.__tcp_msg_receiver)
 
     def search(self):
         """
@@ -61,4 +73,7 @@ class Client:
         """
         ルームから退出する
         """
+        pass
+
+    def __tcp_msg_receiver(self, data):
         pass
