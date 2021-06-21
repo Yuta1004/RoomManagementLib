@@ -23,18 +23,19 @@ class Client:
         self.port = port
         unicast_recv(self.port, self.__tcp_msg_receiver)
 
-    def search(self, port):
+    def search(self, time, port):
         """
         参加できるルームを検索する
 
         ## Params
+        - time : 検索を行う時間
         - port : ルームメッセージを受信するポート
 
         ## Returns
         - available_rooms : 参加可能であるルーム情報の辞書  (id => (address, port, name))
         """
 
-        msg, address = broadcast_recv(port)
+        msg, address = broadcast_recv(time, port)
         splitted_msg = msg.split(":")
         if len(splitted_msg) == 4:
             room_id = splitted_msg[1]
