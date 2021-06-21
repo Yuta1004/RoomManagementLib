@@ -53,7 +53,9 @@ class Host:
         for (address, netmask) in self.host_ipaddresses:
             broadcast_send(address, netmask, port, "RoomManagementLib:{}:{}:{}".format(self.room_id, self.name, self.port))
         time.sleep(tick)
-        return self.join_updated_flag
+        tmp = self.join_updated_flag
+        self.join_updated_flag = False
+        return tmp
 
     def set_values(self, **values):
         """
