@@ -68,9 +68,12 @@ class Client:
         req_msg.set_auth(password)
 
         self.room_id = room_id
-        address = self.available_rooms[self.room_id][0]
-        port = self.available_rooms[self.room_id][1]
-        unicast_send(address, port, req_msg.make())
+        address = self.available_rooms.get(self.room_id, [None])[0]
+        port = self.available_rooms.get(self.room_id, [None, None])[1]
+        if address is not None:
+            unicast_send(address, port, req_msg.make())
+        else:
+            return False
 
         while (self.room_id is not None) and (self.room_name is None):
             time.sleep(1)
