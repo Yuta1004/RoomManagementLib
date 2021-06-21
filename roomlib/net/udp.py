@@ -43,4 +43,4 @@ def broadcast_recv(port):
     except:
         pass
     sock.close()
-    return msg, address
+    return msg.decode(), address
