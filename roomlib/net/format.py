@@ -35,7 +35,7 @@ def format_check_resp(target_dict):
 
     try:
         target_dict["result"]["status"]
-        target_dict["resutl"]["msg"]
+        target_dict["result"]["msg"]
     except:
         return False
     return True
