@@ -108,16 +108,6 @@ class Host:
         self.send(req_msg.make(), self.user_list.keys())
         self.updated_values_keys = set()
 
-################# private ######################
-
-    def notice(self):
-        """
-        更新を通知する
-        """
-
-        for func in self.notice_func:
-            func(self)
-
     def finish(self):
         """
         ルームを解散する
@@ -127,6 +117,16 @@ class Host:
         self.user_list = {}
         self.values = {}
         self.updated_values_keys = {}
+
+################# private ######################
+
+    def notice(self):
+        """
+        更新を通知する
+        """
+
+        for func in self.notice_func:
+            func(self)
 
     def send(self, msg, target_users):
         """
