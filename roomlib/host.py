@@ -144,7 +144,8 @@ class Host:
 
         # 退出リクエスト
         if command == "finish":
-            pass
+            if user_info["id"] in self.user_list:
+                del(user_list[user_info["id"]])
 
         # 情報同期リクエスト
         if command == "sync":
