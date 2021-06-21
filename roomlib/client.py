@@ -44,7 +44,12 @@ class Client:
         ## Params
         - values : key=valueの形で名前と値を指定する (可変長引数)
         """
-        pass
+
+        for (key, value) in values.items():
+            if key in self.values and self.values[key] == value:
+                continue
+            self.values[key] = value
+            self.updated_values_keys.add(key)
 
     def get_value(self, key):
         """
@@ -52,8 +57,12 @@ class Client:
 
         ## Params
         - key : 取得したい共有変数の名前
+
+        ## Returns
+        - value : 指定されたキー名を持つ変数の値を返す(存在しない場None)
         """
-        pass
+
+        return self.values.get(key, None)
 
     def sync(self):
         """
