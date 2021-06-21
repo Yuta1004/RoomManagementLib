@@ -116,6 +116,14 @@ class Client:
 
         self.notice_func.add(func)
 
+    def notice(self):
+        """
+        更新を通知する
+        """
+
+        for func in self.notice_func:
+            func(self)
+
     def sync(self):
         """
         ルームの状態の同期を行う
@@ -144,6 +152,7 @@ class Client:
         self.room_name = None
         self.room_conn_info = (None, None)
         self.available_rooms = {}
+        self.notice()
 
     def __tcp_msg_receiver(self, data):
         msg_json = json.loads(data.msg)
@@ -157,8 +166,7 @@ class Client:
             if command == "sync":
                 for key, value in var_values.items():
                     self.values[key] = value
-                for func in self.notice_func:
-                    func(self)
+                self.notice()
 
             ## 部屋解散
             if command == "finish":
@@ -166,6 +174,7 @@ class Client:
                 self.room_name = None
                 self.room_conn_info = (None, None)
                 self.available_rooms = {}
+                self.notice()
 
         # ホストからの返事
         if format_check_resp(msg_json):

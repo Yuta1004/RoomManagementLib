@@ -95,6 +95,14 @@ class Host:
 
         self.notice_func.add(func)
 
+    def notice(self):
+        """
+        更新を通知する
+        """
+
+        for func in self.notice_func:
+            func(self)
+
     def sync(self):
         """
         ルームの状態を参加クライアントと同期する
@@ -153,6 +161,7 @@ class Host:
                 self.join_updated_flag = True
                 self.user_list[user_info["id"]] = sender_info
                 self.send(ResponseMsgMaker("join", True, "").make(), [user_info["id"]])
+                self.notice()
             else:
                 self.send(ResponseMsgMaker("join", False, "You are already registered!").make(), [user_info["id"]])
 
@@ -160,6 +169,7 @@ class Host:
         if command == "finish":
             if user_info["id"] in self.user_list:
                 del(self.user_list[user_info["id"]])
+            self.notice()
 
         # 情報同期リクエスト
         if command == "sync":
@@ -167,6 +177,5 @@ class Host:
                 self.values[key] = value
                 self.updated_values_keys.add(key)
             self.sync()
-            for func in self.notice_func:
-                func(self)
+            self.notice()
 
