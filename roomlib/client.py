@@ -143,6 +143,16 @@ class Client:
         self.updated_values_keys = {}
         self.notice()
 
+    def is_alive(self):
+        """
+        部屋が生きているかどうかを返す
+
+        ## Returns
+        - status : 部屋が生きている場合True
+        """
+
+        return self.room_is is not None
+
 ################# Private ######################
 
     def notice(self):
