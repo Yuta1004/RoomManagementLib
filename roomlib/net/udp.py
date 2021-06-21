@@ -21,11 +21,12 @@ def broadcast_send(address, subnet, port, msg):
     sock.close()
 
 
-def broadcast_recv(port):
+def broadcast_recv(timeout, port):
     """
     UDPブロードキャストを受信する
 
     ## Params
+    - timeout : タイムアウトまでの時間(s)
     - port : ポート番号
 
     ## Return
@@ -35,6 +36,7 @@ def broadcast_recv(port):
     """
 
     sock = socket(AF_INET, SOCK_DGRAM)
+    sock.settimeout(timeout)
     sock.bind(("", port))
 
     msg, address = None, None
@@ -43,4 +45,4 @@ def broadcast_recv(port):
     except:
         pass
     sock.close()
-    return msg.decode(), address
+    return (b"" if msg is None else msg).decode(), ("" if address is None else address)
