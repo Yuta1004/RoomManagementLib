@@ -39,7 +39,7 @@ def broadcast_recv(port):
 
     msg, address = None, None
     try:
-        msg, address = sock.recvfrom(4096)
+        msg, (address, _) = sock.recvfrom(4096)
     except:
         pass
     sock.close()
