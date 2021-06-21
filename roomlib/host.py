@@ -84,6 +84,16 @@ class Host:
 
         return self.values.get(key, None)
 
+    def get_user_ids(self):
+        """
+        部屋に参加しているユーザのID一覧を返す
+
+        ## Returns
+        - user_id_list : 参加しているユーザのIDのリスト
+        """
+
+        return self.user_list.keys()
+
     def sync(self):
         """
         ルームの状態を参加クライアントと同期する
