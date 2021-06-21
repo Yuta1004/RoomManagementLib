@@ -141,7 +141,8 @@ class Client:
 
             ## 同期処理
             if command == "sync":
-                pass
+                for key, value in var_values.items():
+                    self.values[key] = value
 
             ## 部屋解散
             if command == "finish":
