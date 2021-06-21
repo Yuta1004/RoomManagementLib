@@ -1,7 +1,14 @@
 # RoomManagementLib
 
-ネットワーク上にルームを作成・管理するライブラリ
+ネットワーク上でルームを作成・管理するライブラリ
 
 ## External Lib
 
+- bcrypt
 - netifaces
+
+## Usage
+
+```
+> python3 example.py
+```
