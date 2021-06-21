@@ -139,6 +139,8 @@ class Client:
         self.room_name = None
         self.room_conn_info = (None, None)
         self.available_rooms = {}
+        self.values = {}
+        self.updated_values_keys = {}
         self.notice()
 
 ################# Private ######################
@@ -183,6 +185,8 @@ class Client:
                 self.room_name = None
                 self.room_conn_info = (None, None)
                 self.available_rooms = {}
+                self.values = {}
+                self.updated_values_keys = {}
                 self.notice()
 
         # ホストからの返事

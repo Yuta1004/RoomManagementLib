@@ -124,7 +124,9 @@ class Host:
         """
 
         self.send(RequestMsgMaker("finish", "__host__", self.port).make(), self.user_list.keys())
-        self.user_list = []
+        self.user_list = {}
+        self.values = {}
+        self.updated_values_keys = {}
 
     def send(self, msg, target_users):
         """
