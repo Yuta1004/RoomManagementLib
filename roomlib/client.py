@@ -151,7 +151,7 @@ class Client:
         - status : 部屋が生きている場合True
         """
 
-        return self.room_is is not None
+        return self.room_id is not None
 
 ################# Private ######################
 
