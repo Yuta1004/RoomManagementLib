@@ -1,18 +1,17 @@
 from roomlib import Host
 
-host = Host(PORT, USERS, PASSWORD)
+host = Host(NAME, PORT, USERS, PASSWORD)
 
-for status in host.wait(TICK):
-    sleep()
+while True:
+    if host.wait(TICK, PORT):
+        break
+
+host.get_value(KEY)
 
 host.set_values(KEY1=VALUE1, KEY2=VALUE2, ... , KEYn=VALUEn)
 
 host.sync()
-host.sync(USERID)
 
-host.get_value(KEY)
-
-host.send(VALUE)
 host.send(VALUE, [USERID])
 
 host.finish()
@@ -25,18 +24,16 @@ from roomlib import Client
 
 client = Client(PORT)
 
-rooms = client.search()
+rooms = client.search(TICK, PORT)
 status = client.join(ROOMID, PASSWORD)
+
+client.get_value(KEY)
 
 client.set_values(KEY1=VALUE1, KEY2=VALUE2, ..., KEYn=VALUEn)
 
 client.sync()
 
-client.get_value(KEY)
-
-client.set_receiver(FUNC)
-
-client.exit()
+client.finish()
 
 
 ####
@@ -58,6 +55,7 @@ client.exit()
 
 ## Response Format
 {
+    "command": "AAAAA"
     "result": {
         "status": True or False,
         "msg": "AAAAA"
@@ -65,6 +63,3 @@ client.exit()
 }
 
 ###
-
-- 50000 : tcp
-- 50001 : udp
