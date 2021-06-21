@@ -153,7 +153,7 @@ class Host:
                 self.user_list[user_info["id"]] = sender_info
                 self.send(ResponseMsgMaker("join", True, "").make(), [user_info["id"]])
             else:
-                self.send(ResponseMsgMaker("join", False, "You are already registered!"), [user_info["id"]])
+                self.send(ResponseMsgMaker("join", False, "You are already registered!").make(), [user_info["id"]])
 
         # 退出リクエスト
         if command == "finish":
