@@ -141,19 +141,19 @@ class Host:
         # 入室リクエスト
         if command == "join":
             if len(self.user_list) > self.users_limit:
-                unicast_send(sender_info[0], sender_info[1], ResponseMsgMaker(False, "Sorry, This room is full.").make())
+                unicast_send(sender_info[0], sender_info[1], ResponseMsgMaker("join", False, "Sorry, This room is full.").make())
                 return
 
             if not auth_password(auth_info["password"], self.hashed_password):
-                unicast_send(sender_info[0], sender_info[1], ResponseMsgMaker(False, "Password is unauthorized.").make())
+                unicast_send(sender_info[0], sender_info[1], ResponseMsgMaker("join", False, "Password is unauthorized.").make())
                 return
 
             if user_info["id"] not in self.user_list:
                 self.join_updated_flag = True
                 self.user_list[user_info["id"]] = sender_info
-                self.send(ResponseMsgMaker(True, "").make(), [user_info["id"]])
+                self.send(ResponseMsgMaker("join", True, "").make(), [user_info["id"]])
             else:
-                self.send(ResponseMsgMaker(False, "You are already registered!"), [user_info["id"]])
+                self.send(ResponseMsgMaker("join", False, "You are already registered!"), [user_info["id"]])
 
         # 退出リクエスト
         if command == "finish":

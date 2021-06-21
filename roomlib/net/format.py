@@ -115,6 +115,7 @@ class ResponseMsgMaker:
 
     ## Format
     {
+        "command": str,
         "result": {
             "status": bool,
             "msg": str
@@ -122,16 +123,18 @@ class ResponseMsgMaker:
     }
     """
 
-    def __init__(self, status, msg):
+    def __init__(self, command, status, msg):
         """
         ResponseMsgMakerのコンストラクタ
 
         ## Params
+        - command : コマンド名
         - status : 処理結果
         - msg : メッセージ
         """
 
         self.data = {
+            "command": command,
             "result": {
                 "status": status,
                 "msg": msg
