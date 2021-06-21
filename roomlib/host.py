@@ -11,6 +11,8 @@ from roomlib.net.format import format_check_req, RequestMsgMaker, ResponseMsgMak
 
 class Host:
 
+################# Public ######################
+
     def __init__(self, name, port, users_limit, password):
         """
         Hostのコンストラクタ
@@ -95,14 +97,6 @@ class Host:
 
         self.notice_func.add(func)
 
-    def notice(self):
-        """
-        更新を通知する
-        """
-
-        for func in self.notice_func:
-            func(self)
-
     def sync(self):
         """
         ルームの状態を参加クライアントと同期する
@@ -113,6 +107,24 @@ class Host:
         req_msg.set_values(**dict(zip(target_key, [self.values[key] for key in target_key])))
         self.send(req_msg.make(), self.user_list.keys())
         self.updated_values_keys = set()
+
+################# private ######################
+
+    def notice(self):
+        """
+        更新を通知する
+        """
+
+        for func in self.notice_func:
+            func(self)
+
+    def finish(self):
+        """
+        ルームを解散する
+        """
+
+        self.send(RequestMsgMaker("finish", "__host__", self.port).make(), self.user_list.keys())
+        self.user_list = []
 
     def send(self, msg, target_users):
         """
@@ -128,14 +140,6 @@ class Host:
                 address = self.user_list[user_id][0]
                 port = self.user_list[user_id][1]
                 unicast_send(address, port, msg)
-
-    def finish(self):
-        """
-        ルームを解散する
-        """
-
-        self.send(RequestMsgMaker("finish", "__host__", self.port).make(), self.user_list.keys())
-        self.user_list = []
 
     def __tcp_msg_receiver(self, data):
         msg_json = json.loads(data.msg)

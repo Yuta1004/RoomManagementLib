@@ -9,6 +9,8 @@ from roomlib.net.format import format_check_req, format_check_resp, RequestMsgMa
 
 class Client:
 
+################# Public ######################
+
     def __init__(self, port):
         """
         Clientのコンストラクタ
@@ -116,31 +118,11 @@ class Client:
 
         self.notice_func.add(func)
 
-    def notice(self):
-        """
-        更新を通知する
-        """
-
-        for func in self.notice_func:
-            func(self)
-
     def sync(self):
         """
         ルームの状態の同期を行う
         """
         pass
-
-    def send(self, msg):
-        """
-        ホストにメッセージを送信する
-
-        ## Params
-        - msg : メッセージ
-        """
-
-        address = self.room_conn_info[0]
-        port = self.room_conn_info[1]
-        unicast_send(address, port, msg)
 
     def finish(self):
         """
@@ -153,6 +135,28 @@ class Client:
         self.room_conn_info = (None, None)
         self.available_rooms = {}
         self.notice()
+
+################# Private ######################
+
+    def notice(self):
+        """
+        更新を通知する
+        """
+
+        for func in self.notice_func:
+            func(self)
+
+    def send(self, msg):
+        """
+        ホストにメッセージを送信する
+
+        ## Params
+        - msg : メッセージ
+        """
+
+        address = self.room_conn_info[0]
+        port = self.room_conn_info[1]
+        unicast_send(address, port, msg)
 
     def __tcp_msg_receiver(self, data):
         msg_json = json.loads(data.msg)
