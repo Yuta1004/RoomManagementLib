@@ -13,7 +13,6 @@ def get_host_ipaddresses():
     ## Return
     - result : 取得したタプル(addr, netmask)の配列
     """
-
     result = []
     if_list = netifaces.interfaces()
     for _if in if_list:

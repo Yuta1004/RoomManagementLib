@@ -11,7 +11,6 @@ def broadcast_send(address, subnet, port, msg):
     - subnet : サブネット(xxx.xxx.xxx.xxx)
     - port : ポート番号
     """
-
     target_address = str(ip_interface(address+"/"+str(subnet)).network.broadcast_address)
 
     sock = socket(AF_INET, SOCK_DGRAM)
@@ -34,7 +33,6 @@ def broadcast_recv(timeout, port):
     - address : 送信元ホストのアドレス
     (※タイムアウトしたなら両方None)
     """
-
     sock = socket(AF_INET, SOCK_DGRAM)
     sock.settimeout(timeout)
     sock.bind(("", port))

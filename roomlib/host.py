@@ -23,7 +23,6 @@ class Host:
         - users_limit : 参加人数の上限
         - password : ルームのパスワード
         """
-
         self.name = name
         self.room_id = str(uuid.uuid4())
         self.hashed_password = hash_password(password)
@@ -52,7 +51,6 @@ class Host:
         ## Returns
         - updated : 情報の更新があった場合はTrue
         """
-
         for (address, netmask) in self.host_ipaddresses:
             broadcast_send(address, netmask, port, "RoomManagementLib:{}:{}:{}".format(self.room_id, self.name, self.port))
         time.sleep(tick)
@@ -67,7 +65,6 @@ class Host:
         ## Params
         - values : key=valueの形で名前と値を指定する (可変長引数)
         """
-
         for (key, value) in values.items():
             if key in self.values and self.values[key] == value:
                 continue
@@ -84,7 +81,6 @@ class Host:
         ## Returns
         - value : 共有変数の値(指定された変数が存在しない場合None)
         """
-
         return self.values.get(key, None)
 
     def add_update_notice_func(self, func):
@@ -94,14 +90,12 @@ class Host:
         ## Params
         - func : 更新時に実行する関数
         """
-
         self.notice_func.add(func)
 
     def sync(self):
         """
         ルームの状態を参加クライアントと同期する
         """
-
         target_key = list(self.updated_values_keys)
         req_msg = RequestMsgMaker("sync", "__host__", self.port)
         req_msg.set_values(**dict(zip(target_key, [self.values[key] for key in target_key])))
@@ -112,7 +106,6 @@ class Host:
         """
         ルームを解散する
         """
-
         self.send(RequestMsgMaker("finish", "__host__", self.port).make(), self.user_list.keys())
         self.user_list = {}
         self.values = {}
@@ -123,7 +116,6 @@ class Host:
         Hostの動作を終了させる
         ※解散とは動作が異なるので注意!
         """
-
         self.worker.quit()
 
 
@@ -133,7 +125,6 @@ class Host:
         """
         更新を通知する
         """
-
         for func in self.notice_func:
             func(self)
 
@@ -145,7 +136,6 @@ class Host:
         - msg : メッセージ
         - target_users : 送信対象ユーザのIDのリスト
         """
-
         for user_id in target_users:
             if user_id in self.user_list:
                 address = self.user_list[user_id][0]

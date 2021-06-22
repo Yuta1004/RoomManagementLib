@@ -13,7 +13,6 @@ def unicast_send(address, port, msg):
     - port : 相手ホストのポート
     - msg : メッセージ
     """
-
     sock = socket(AF_INET, SOCK_STREAM)
     sock.connect((address, port))
     sock.send(msg.encode())
@@ -31,7 +30,6 @@ def unicast_recv(port, receiver):
     ## Returns
     - worker : 起動済みRecvWorker
     """
-
     worker = RecvWorker(port, receiver)
     worker.setDaemon(True)
     worker.start()
@@ -51,7 +49,6 @@ class RecvWorker(threading.Thread):
         - port : 通信を受け付けるポート
         - receiver : メッセージを受け付ける関数 (引数は1つ,型はnet.tcp.Message)
         """
-
         super(RecvWorker, self).__init__()
         self.port = port
         self.receiver = receiver
@@ -83,7 +80,6 @@ class Message:
     """
     受信したメッセージを扱うデータクラス
     """
-
     address: str
     port: int
     msg: str
@@ -99,7 +95,6 @@ class Message:
         - msg(str) : メッセージ
         - is_error_happened(bool): エラー発生の有無
         """
-
         self.address = address
         self.port = port
         self.msg = msg

@@ -11,7 +11,6 @@ def format_check_req(target_dict):
     ## Returns
     - result : 仕様を全て満たす場合はTrue,そうでないときFalse
     """
-
     try:
         target_dict["command"]
         target_dict["user"]["id"]
@@ -32,7 +31,6 @@ def format_check_resp(target_dict):
     ## Returns
     - result : 仕様を全て満たす場合はTrue,そうでないときFalse
     """
-
     try:
         target_dict["result"]["status"]
         target_dict["result"]["msg"]
@@ -70,7 +68,6 @@ class RequestMsgMaker:
         - user_id : 自分のユーザID
         - myport : 自分のポート
         """
-
         self.data = {
             "command": command,
             "user": {
@@ -91,7 +88,6 @@ class RequestMsgMaker:
         ## Params
         - password : パスワード(未ハッシュ)
         """
-
         self.data["auth"]["password"] = password
 
     def set_values(self, **values):
@@ -132,7 +128,6 @@ class ResponseMsgMaker:
         - status : 処理結果
         - msg : メッセージ
         """
-
         self.data = {
             "command": command,
             "result": {

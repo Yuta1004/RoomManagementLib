@@ -18,7 +18,6 @@ class Client:
         ## Params
         - port : ルーム検索対象ポート
         """
-
         self.user_id = str(uuid.uuid4())
         self.notice_func = set()
 
@@ -44,7 +43,6 @@ class Client:
         ## Returns
         - available_rooms : 参加可能であるルーム情報の辞書  (id => (address, port, name))
         """
-
         msg, address = broadcast_recv(time, port)
         splitted_msg = msg.split(":")
         if len(splitted_msg) == 4:
@@ -65,7 +63,6 @@ class Client:
         ## Returns
         - result : 入室が成功した場合True
         """
-
         req_msg = RequestMsgMaker("join", self.user_id, self.port)
         req_msg.set_auth(password)
 
@@ -88,7 +85,6 @@ class Client:
         ## Params
         - values : key=valueの形で名前と値を指定する (可変長引数)
         """
-
         for (key, value) in values.items():
             if key in self.values and self.values[key] == value:
                 continue
@@ -105,7 +101,6 @@ class Client:
         ## Returns
         - value : 指定されたキー名を持つ変数の値を返す(存在しない場None)
         """
-
         return self.values.get(key, None)
 
     def add_update_notice_func(self, func):
@@ -115,14 +110,12 @@ class Client:
         ## Params
         - func : 更新時に呼ばれる関数
         """
-
         self.notice_func.add(func)
 
     def sync(self):
         """
         ルームの状態の同期を行う
         """
-
         target_key = list(self.updated_values_keys)
         req_msg = RequestMsgMaker("sync", self.user_id, self.port)
         req_msg.set_values(**dict(zip(target_key, [self.values[key] for key in target_key])))
@@ -133,7 +126,6 @@ class Client:
         """
         ルームから退出する
         """
-
         self.send(RequestMsgMaker("finish", self.user_id, self.port).make())
         self.room_id = None
         self.room_name = None
@@ -150,7 +142,6 @@ class Client:
         ## Returns
         - status : 部屋が生きている場合True
         """
-
         return self.room_id is not None
 
     def quit(self):
@@ -158,7 +149,6 @@ class Client:
         Clientの動作を終了する
         ※ルーム退出とは動作が異なるので注意!
         """
-
         self.worker.quit()
 
 ################# Private ######################
@@ -167,7 +157,6 @@ class Client:
         """
         更新を通知する
         """
-
         for func in self.notice_func:
             func(self)
 
@@ -178,7 +167,6 @@ class Client:
         ## Params
         - msg : メッセージ
         """
-
         address = self.room_conn_info[0]
         port = self.room_conn_info[1]
         unicast_send(address, port, msg)
