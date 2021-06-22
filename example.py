@@ -23,6 +23,7 @@ def host_mode():
 
     # 4. 部屋を解散する
     host.finish()
+    host.quit()
     print("Bye...")
 
 
@@ -56,6 +57,7 @@ def client_mode():
     # 5. ホストが部屋を解散する or 自分から退出する
     # client.finish()
     print("Is room available ? => {}".format(client.is_alive()))
+    client.quit()
 
 
 if __name__ == "__main__":

@@ -31,7 +31,7 @@ class Client:
         self.updated_values_keys = set()
 
         self.port = port
-        unicast_recv(self.port, self.__tcp_msg_receiver)
+        self.worker = unicast_recv(self.port, self.__tcp_msg_receiver)
 
     def search(self, time, port):
         """
@@ -152,6 +152,14 @@ class Client:
         """
 
         return self.room_id is not None
+
+    def quit(self):
+        """
+        Clientの動作を終了する
+        ※ルーム退出とは動作が異なるので注意!
+        """
+
+        self.worker.quit()
 
 ################# Private ######################
 

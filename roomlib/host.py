@@ -39,7 +39,7 @@ class Host:
         self.host_ipaddresses = get_host_ipaddresses()
 
         self.port = port
-        unicast_recv(self.port, self.__tcp_msg_receiver)
+        self.worker = unicast_recv(self.port, self.__tcp_msg_receiver)
 
     def wait(self, tick, port):
         """
@@ -117,6 +117,15 @@ class Host:
         self.user_list = {}
         self.values = {}
         self.updated_values_keys = {}
+
+    def quit(self):
+        """
+        Hostの動作を終了させる
+        ※解散とは動作が異なるので注意!
+        """
+
+        self.worker.quit()
+
 
 ################# private ######################
 

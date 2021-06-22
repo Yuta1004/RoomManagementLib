@@ -27,11 +27,15 @@ def unicast_recv(port, receiver):
     ## Params
     - port : 通信を受け付けるポート
     - receiver : メッセージを受け取る関数 (引数は1つ)
+
+    ## Returns
+    - worker : 起動済みRecvWorker
     """
 
     worker = RecvWorker(port, receiver)
     worker.setDaemon(True)
     worker.start()
+    return worker
 
 
 class RecvWorker(threading.Thread):
@@ -52,13 +56,16 @@ class RecvWorker(threading.Thread):
         self.port = port
         self.receiver = receiver
 
-    def run(self):
-        sock = socket(AF_INET, SOCK_STREAM)
-        sock.bind(("", self.port))
-        sock.listen(4)
+    def quit(self):
+        self.sock.close()
 
-        while True:
-            csock, (address, port) = sock.accept()
+    def run(self):
+        self.sock = socket(AF_INET, SOCK_STREAM)
+        self.sock.bind(("", self.port))
+        self.sock.listen(4)
+
+        while self.is_alive():
+            csock, (address, port) = self.sock.accept()
             recv_data = Message(address, port, "", False)
             try:
                 recv_data.msg = csock.recv(4096).decode()
