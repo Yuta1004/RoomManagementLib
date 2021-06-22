@@ -86,8 +86,6 @@ class Client:
         - values : key=valueの形で名前と値を指定する (可変長引数)
         """
         for (key, value) in values.items():
-            if key in self.values and self.values[key] == value:
-                continue
             self.values[key] = value
             self.updated_values_keys.add(key)
 
