@@ -65,7 +65,10 @@ class RecvWorker(threading.Thread):
         self.sock.listen(4)
 
         while self.is_alive():
-            csock, (address, port) = self.sock.accept()
+            try:
+                csock, (address, port) = self.sock.accept()
+            except:
+                break
             recv_data = Message(address, port, "", False)
             try:
                 recv_data.msg = csock.recv(4096).decode()
