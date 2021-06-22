@@ -101,6 +101,7 @@ class Host:
         req_msg.set_values(**dict(zip(target_key, [self.values[key] for key in target_key])))
         self.send(req_msg.make(), self.user_list.keys())
         self.updated_values_keys = set()
+        self.notice()
 
     def finish(self):
         """
